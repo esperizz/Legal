@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Tokens del design system de Reclamá.
+ * Cada token genera utilidades de Tailwind: bg-primary, text-ink, border-line, etc.
+ * La página /design-system los muestra en uso.
+ */
+@theme {
+  /* Marca */
+  --color-primary: #2e46c9;
+  --color-primary-hover: #2437a6;
+  --color-primary-soft: #e9ecfb;
+
+  /* Texto */
+  --color-ink: #17203a;
+  --color-muted: #5a6378;
+  --color-subtle: #8a91a3;
+
+  /* Superficies */
+  --color-canvas: #f6f5f1;
+  --color-surface: #ffffff;
+  --color-paper: #fffdf8;
+  --color-line: #e2e0d8;
+  --color-line-strong: #c9c6bb;
+
+  /* Estados */
+  --color-success: #1d7a4b;
+  --color-success-soft: #e3f3ea;
+  --color-warning: #8f5b00;
+  --color-warning-soft: #fdf3dc;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+
+  /* Marcadores de la vista previa (datos que faltan) */
+  --color-marker: #fff1b8;
+
+  /* Tipografía */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-carta), ui-serif, Georgia, serif;
+
+  /* Radios */
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+
+  /* Sombras */
+  --shadow-card: 0 1px 2px rgb(23 32 58 / 0.06), 0 4px 16px rgb(23 32 58 / 0.06);
+  --shadow-sheet: 0 -8px 32px rgb(23 32 58 / 0.16);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
 }
