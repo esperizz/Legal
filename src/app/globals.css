@@ -14,14 +14,14 @@
   /* Texto */
   --color-ink: #17203a;
   --color-muted: #5a6378;
-  --color-subtle: #8a91a3;
+  --color-subtle: #666d80;
 
   /* Superficies */
   --color-canvas: #f6f5f1;
   --color-surface: #ffffff;
   --color-paper: #fffdf8;
   --color-line: #e2e0d8;
-  --color-line-strong: #c9c6bb;
+  --color-line-strong: #8a8577;
 
   /* Estados */
   --color-success: #1d7a4b;

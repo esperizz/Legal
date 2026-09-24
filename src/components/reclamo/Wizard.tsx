@@ -11,6 +11,7 @@ import { generarCarta, type Carta } from "@/lib/reclamo/generar";
 import { useReclamo } from "@/lib/reclamo/ReclamoProvider";
 import { PASOS, primerPasoIncompleto, validarPaso, type Errores, type Paso } from "@/lib/reclamo/validar";
 import { LetterPreview } from "./LetterPreview";
+import { EmpezarDeNuevo } from "./EmpezarDeNuevo";
 import { COMPONENTES, TEXTOS } from "./Pasos";
 
 type Vista = Paso | "revision";
@@ -24,6 +25,7 @@ export function Wizard() {
   const { reclamo, listo, actualizar } = useReclamo();
   const [errores, setErrores] = useState<Errores>({});
   const [verCarta, setVerCarta] = useState(false);
+  const [intento, setIntento] = useState(0);
   const titulo = useRef<HTMLHeadingElement>(null);
 
   const pedido = params.get("paso");
@@ -47,6 +49,24 @@ export function Wizard() {
     titulo.current?.focus();
   }, [vista]);
 
+  // Al fallar la validación, llevar al primer error: en el celular puede quedar
+  // fuera de pantalla o tapado por la barra inferior.
+  useEffect(() => {
+    if (!intento) return;
+    const primero = document.querySelector<HTMLElement>(
+      '#paso [aria-invalid="true"], #paso [role="alert"]',
+    );
+    primero?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (primero?.matches("input, textarea")) primero.focus({ preventScroll: true });
+  }, [intento]);
+
+  useEffect(() => {
+    if (!verCarta) return;
+    const cerrar = (e: KeyboardEvent) => e.key === "Escape" && setVerCarta(false);
+    window.addEventListener("keydown", cerrar);
+    return () => window.removeEventListener("keydown", cerrar);
+  }, [verCarta]);
+
   const ir = (v: Vista) => {
     setErrores({});
     router.push(`/reclamo?paso=${v}`);
@@ -57,7 +77,10 @@ export function Wizard() {
     if (vista === "revision") return;
     const encontrados = validarPaso(vista, reclamo);
     setErrores(encontrados);
-    if (Object.keys(encontrados).length) return;
+    if (Object.keys(encontrados).length) {
+      setIntento((n) => n + 1);
+      return;
+    }
     if (vista === "tipo") registrar("reclamo_iniciado", { tipo: reclamo.tipo ?? "" });
     registrar("paso_completado", { paso: vista });
     ir(indice + 1 < PASOS.length ? PASOS[indice + 1] : "revision");
@@ -73,6 +96,9 @@ export function Wizard() {
   if (!listo) return <Header />;
 
   const Contenido = vista !== "revision" ? COMPONENTES[vista] : null;
+  // Un error desaparece apenas el usuario lo corrige, sin esperar a "Continuar".
+  const actuales = vista !== "revision" ? validarPaso(vista, reclamo) : {};
+  const vigentes = Object.fromEntries(Object.entries(errores).filter(([campo]) => campo in actuales));
   const textos =
     vista === "revision"
       ? {
@@ -84,7 +110,10 @@ export function Wizard() {
   return (
     <>
       <Header>
-        <span className="text-sm text-muted">Se guarda automáticamente</span>
+        <div className="flex items-center gap-2">
+          <span className="hidden text-sm text-muted sm:inline">Se guarda en este dispositivo</span>
+          <EmpezarDeNuevo />
+        </div>
       </Header>
 
       <main className="mx-auto grid w-full max-w-6xl flex-1 gap-10 px-4 pt-6 pb-32 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:pb-16">
@@ -97,7 +126,11 @@ export function Wizard() {
             >
               <span aria-hidden>←</span> Volver
             </button>
-            <Progress actual={Math.min(indice + 1, PASOS.length)} total={PASOS.length} />
+            <Progress
+              actual={Math.min(indice + 1, PASOS.length)}
+              total={PASOS.length}
+              etiqueta={vista === "revision" ? "Revisión final" : undefined}
+            />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -109,7 +142,14 @@ export function Wizard() {
 
           {Contenido ? (
             <form id="paso" onSubmit={continuar} noValidate className="flex flex-col gap-8">
-              <Contenido reclamo={reclamo} actualizar={actualizar} errores={errores} />
+              <Contenido reclamo={reclamo} actualizar={actualizar} errores={vigentes} />
+              {indice > 0 && (
+                // En el celular la vista previa también queda a la vista, debajo de las preguntas.
+                <div className="flex flex-col gap-3 lg:hidden">
+                  <p className="text-sm font-semibold text-muted">Así va tu carta</p>
+                  <LetterPreview carta={carta} />
+                </div>
+              )}
               <div className="hidden lg:block">
                 <Button type="submit" tamano="lg">
                   {indice === PASOS.length - 1 ? "Ver mi carta completa" : "Continuar"}

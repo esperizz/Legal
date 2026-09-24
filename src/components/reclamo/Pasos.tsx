@@ -4,6 +4,7 @@ import Link from "next/link";
 import { TextAreaField, TextField } from "@/components/ui/Field";
 import { OptionCard } from "@/components/ui/OptionCard";
 import { consecuenciasPara, PEDIDOS, PLAZOS, TIPOS, tipoPorId } from "@/lib/reclamo/catalogo";
+import { formatearPesos, parsearMonto } from "@/lib/reclamo/formato";
 import type { Persona, Reclamo } from "@/lib/reclamo/tipos";
 import type { Errores, Paso } from "@/lib/reclamo/validar";
 
@@ -93,8 +94,9 @@ export function PasoHechos({ reclamo, actualizar, errores }: PasoProps) {
     <div className="flex flex-col gap-5">
       <TextAreaField
         label="Qué pasó"
-        ayuda="Qué, cuándo y cuánto. Evitá insultos o amenazas: le restan seriedad al reclamo."
-        placeholder={ejemplo ? `Por ejemplo: ${ejemplo}` : undefined}
+        ayuda={`Qué, cuándo y cuánto. Evitá insultos o amenazas: le restan seriedad al reclamo.${
+          ejemplo ? ` Ejemplo: "${ejemplo}"` : ""
+        }`}
         value={reclamo.hechos.descripcion}
         error={errores["hechos.descripcion"]}
         maxLength={700}
@@ -200,6 +202,7 @@ export function PasoRemitente({ reclamo, actualizar, errores }: PasoProps) {
 export function PasoPedido({ reclamo, actualizar, errores }: PasoProps) {
   const opciones = reclamo.tipo ? PEDIDOS[reclamo.tipo] : [];
   const elegido = opciones.find((p) => p.id === reclamo.pedido.id);
+  const monto = parsearMonto(reclamo.pedido.monto);
   const setPedido = (cambio: Partial<Reclamo["pedido"]>) =>
     actualizar((r) => ({ ...r, pedido: { ...r.pedido, ...cambio } }));
 
@@ -227,6 +230,11 @@ export function PasoPedido({ reclamo, actualizar, errores }: PasoProps) {
           error={errores["pedido.monto"]}
           onChange={(e) => setPedido({ monto: e.target.value })}
         />
+      )}
+      {elegido?.pideMonto && monto && (
+        <p className="-mt-6 text-sm text-muted" aria-live="polite">
+          En la carta va a decir: <strong className="text-ink">{formatearPesos(monto)}</strong>
+        </p>
       )}
 
       {elegido?.pideDetalle && (

@@ -29,6 +29,9 @@ describe("formato", () => {
   it("interpreta montos escritos a la argentina", () => {
     expect(parsearMonto("450.000")).toBe(450000);
     expect(parsearMonto("$ 1.250,50")).toBe(1250.5);
+    expect(parsearMonto("1.500")).toBe(1500);
+    expect(parsearMonto("1.5")).toBe(1.5);
+    expect(parsearMonto("1.5.0")).toBeNull();
     expect(parsearMonto("abc")).toBeNull();
     expect(parsearMonto("0")).toBeNull();
     expect(formatearPesos(450000)).toBe("$ 450.000,00");

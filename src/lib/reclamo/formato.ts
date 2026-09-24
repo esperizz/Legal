@@ -16,11 +16,18 @@ function desdeISO(iso: string): Date | null {
   return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
 }
 
-/** Interpreta montos escritos a la argentina: "450.000", "1.250,50", "$ 3000". */
+/**
+ * Interpreta montos escritos a la argentina: "450.000", "1.250,50", "$ 3000".
+ * Un punto solo es separador de miles si le siguen grupos de 3 dígitos
+ * ("1.500" = 1500); si no, es decimal ("1.5" = 1,5).
+ */
 export function parsearMonto(texto: string): number | null {
   const limpio = texto.replace(/[^\d.,]/g, "");
   if (!/\d/.test(limpio)) return null;
-  const numero = Number(limpio.replace(/\./g, "").replace(",", "."));
+  let normalizado = limpio;
+  if (limpio.includes(",")) normalizado = limpio.replace(/\./g, "").replace(",", ".");
+  else if (/^\d{1,3}(\.\d{3})+$/.test(limpio)) normalizado = limpio.replace(/\./g, "");
+  const numero = Number(normalizado);
   return Number.isFinite(numero) && numero > 0 ? numero : null;
 }
 

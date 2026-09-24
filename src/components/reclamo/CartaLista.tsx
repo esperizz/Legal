@@ -8,6 +8,7 @@ import { registrar } from "@/lib/eventos";
 import { generarCarta } from "@/lib/reclamo/generar";
 import { useReclamo } from "@/lib/reclamo/ReclamoProvider";
 import { primerPasoIncompleto } from "@/lib/reclamo/validar";
+import { EmpezarDeNuevo } from "./EmpezarDeNuevo";
 import { LetterPreview } from "./LetterPreview";
 
 export function CartaLista() {
@@ -155,6 +156,10 @@ export function CartaLista() {
             Ver los próximos pasos
           </ButtonLink>
         </section>
+
+        <div className="no-print -mt-4">
+          <EmpezarDeNuevo texto="Borrar mis datos de este dispositivo" destino="/" />
+        </div>
       </main>
       <Footer />
     </>
