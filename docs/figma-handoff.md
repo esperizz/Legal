@@ -28,19 +28,50 @@ Estado del volcado a Figma del proyecto Reclamá, para retomar en una sesión nu
   Overline (Inter) y Letter/Body, Letter/Small (Source Serif 4).
 - **Estilos de efecto:** Shadow/Card, Shadow/Sheet.
 - **Cover** y **Foundations** (muestras de color, tipografía, radios y sombras) terminadas.
-- **Components (página `1:72`):** Button (`5:17`, Style Primary/Secondary/Ghost × Size MD/LG,
-  propiedad Label) y TextField (`5:45`, State Default/Filled/Focus/Error, propiedades Label,
-  Help, Show help, Value, Error message). Próximo componente se ubica en y ≈ 1024.
+- **Components (página `1:72`), completa:**
+  - Button (`5:17`, Style Primary/Secondary/Ghost × Size MD/LG, propiedad Label).
+  - TextField (`5:45`, State Default/Filled/Focus/Error, propiedades Label, Help, Show help,
+    Value, Error message).
+  - OptionCard (`8:25`, Type Radio/Checkbox × Selected No/Yes, propiedades Título, Descripción,
+    Mostrar descripción).
+  - Callout (`9:19`, Tono Info/Success/Warning, propiedades opcional Título y Texto).
+  - Progress (`13:30`, variante Paso 1-6 y Revision; cada variante trae su propio texto y ancho
+    de relleno — ver nota debajo).
+  - Letter (`14:34`, Estado Incompleta/Completa; los marcadores `[dato]` del código se muestran
+    como texto en color warning en vez del chip con fondo amarillo, por simplicidad).
+  - Header (`16:29`, Layout Landing/Wizard/Simple; Wizard tiene la propiedad booleana "Mostrar
+    texto guardado" para ocultar el aviso en mobile; usa instancias de Button/Ghost/MD).
+  - BarraInferior (`18:12`, ConVerCarta Yes/No; usa instancias de Button/Secondary/LG y
+    Button/Primary/LG).
+- **Pantallas · Mobile (página `1:74`), completa — 8 pantallas de 390 px de ancho, en una fila
+  sin superposición:** Landing, Paso 1 · Tipo, Paso 2 · Qué pasó (con vista previa inline),
+  Paso 4 · Pedido (con error), Revisión, Carta lista, ¿Y después?, Derivación (motivo laboral).
+  Todas armadas con instancias de los componentes de la página Components.
+- **Pantallas · Desktop (página `1:75`), completa — 3 pantallas de 1440 px, en una fila:**
+  Landing (hero a 2 columnas), Cuestionario con vista previa lateral (columna de 440 px,
+  Header con el aviso "Se guarda en este dispositivo" visible), Carta lista.
+- Revisión visual final hecha con capturas de cada página completa: sin overlaps, sin texto
+  cortado, contenido y jerarquía visual consistentes con la app real.
 
-## Pendiente
+## Nota técnica: bug de texto compartido en variantes
 
-1. Componentes: OptionCard (Type Radio/Checkbox × Selected), Callout (Info/Success/Warning),
-   Progress (pasos 1-6 + Revisión), Letter (vista previa de la carta, Incompleta/Completa),
-   Header y barra inferior mobile.
-2. Pantallas mobile (390 px) armadas con instancias: Landing, Paso tipo, Paso "¿Qué pasó?" con
-   vista previa, Paso pedido con error, Revisión, Carta lista, ¿Y después?, Derivación.
-3. Pantallas desktop: Landing, Cuestionario con vista previa lateral, Carta lista.
-4. Revisión visual final de cada página.
+Al crear una propiedad `TEXT` con `addComponentProperty` por separado en cada variante de un
+component set (mismo nombre de propiedad, ej. "Etiqueta" en Progress), Figma fusiona esas
+propiedades en una sola definición compartida: todas las instancias terminan mostrando el
+valor por defecto de la *primera* variante creada, sin importar cuál esté seleccionada. Se
+corrigió sobreescribiendo el valor de esa propiedad por instancia (`setProperties`) según el
+nombre real de la variante. Si se agregan más pasos/variantes al componente Progress en el
+futuro, aplicar el mismo ajuste.
+
+## Pendiente (opcional, no bloqueante)
+
+- Revisar visualmente en Figma (no solo por captura) que los textos largos no corten en algún
+  ancho intermedio no probado.
+- Si se quiere mayor fidelidad, reemplazar el chip amarillo de los marcadores en Letter por una
+  solución con fondo real (hoy es solo texto en color warning).
+- No se creó un componente reusable de Textarea ni de campo de fecha: en las pantallas que los
+  usan ("¿Qué pasó?") se armaron a partir de instancias de TextField con el input agrandado a
+  mano. Si se quiere que sea un componente aparte, falta crearlo en la página Components.
 
 Referencia visual: la app funcionando (`npm run dev`), que ya refleja las correcciones de la
 evaluación heurística.
