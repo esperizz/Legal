@@ -35,7 +35,7 @@
   --color-marker: #fff1b8;
 
   /* Tipografía */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-serif-carta), ui-serif, Georgia, serif;
 
   /* Radios */

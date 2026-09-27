@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Geist, Source_Serif_4 } from "next/font/google";
 import { ReclamoProvider } from "@/lib/reclamo/ReclamoProvider";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 const serif = Source_Serif_4({ variable: "--font-serif-carta", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es-AR" className={`${inter.variable} ${serif.variable} h-full antialiased`}>
+    <html lang="es-AR" className={`${geist.variable} ${serif.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ReclamoProvider>{children}</ReclamoProvider>
       </body>

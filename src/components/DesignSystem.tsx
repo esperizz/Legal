@@ -105,7 +105,7 @@ export function DesignSystem() {
         </div>
       </Seccion>
 
-      <Seccion titulo="Tipografía" descripcion="Inter para la interfaz y Source Serif 4 para la carta.">
+      <Seccion titulo="Tipografía" descripcion="Geist para la interfaz y Source Serif 4 para la carta.">
         <div className="flex flex-col gap-5">
           {TIPOGRAFIA.map((t) => (
             <div key={t.nombre} className="grid gap-1 sm:grid-cols-[160px_1fr] sm:items-baseline">
