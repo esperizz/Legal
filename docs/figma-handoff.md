@@ -25,7 +25,9 @@ Estado del volcado a Figma del proyecto Reclamá, para retomar en una sesión nu
   Layout: spacing/1 `1:42`, 2 `1:43`, 3 `1:44`, 4 `1:45`, 5 `1:46`, 6 `1:47`, 8 `1:48`,
   10 `1:49`, 12 `1:50`, 16 `1:51`; radius/sm `1:52`, control `1:53`, card `1:54`, full `1:55`.
 - **Estilos de texto (12):** Display, Heading/H1-H3, Body/Large-Base-Small, Label/Base-Small,
-  Overline (Inter) y Letter/Body, Letter/Small (Source Serif 4).
+  Overline (**Geist**, migrados desde Inter) y Letter/Body, Letter/Small (Source Serif 4, sin cambios).
+  Mapeo de pesos: Inter Regular/Medium/Semi Bold/Bold → Geist Regular/Medium/SemiBold/Bold
+  (el nombre de estilo de Geist en Figma no lleva espacio: "SemiBold", no "Semi Bold").
 - **Estilos de efecto:** Shadow/Card, Shadow/Sheet.
 - **Cover** y **Foundations** (muestras de color, tipografía, radios y sombras) terminadas.
 - **Components (página `1:72`), completa:**
@@ -52,6 +54,16 @@ Estado del volcado a Figma del proyecto Reclamá, para retomar en una sesión nu
   Header con el aviso "Se guarda en este dispositivo" visible), Carta lista.
 - Revisión visual final hecha con capturas de cada página completa: sin overlaps, sin texto
   cortado, contenido y jerarquía visual consistentes con la app real.
+- **Tipografía Geist** aplicada en toda la app y en todo el archivo de Figma (código y diseño
+  quedaron sincronizados):
+  - Código: `src/app/layout.tsx` carga `Geist` de `next/font/google` en vez de `Inter`
+    (variable `--font-geist`); `globals.css` actualiza `--font-sans` para usarla.
+  - Figma: los 12 estilos de texto (menos Letter/Body y Letter/Small, que siguen en Source
+    Serif 4) se migraron a Geist. Además se recorrieron las 4 páginas (Cover, Foundations,
+    Components, Screens · Mobile, Screens · Desktop) buscando texto con la fuente puesta a mano
+    (no vía estilo) y se migró también — labels de botones, números de pasos, wordmark del
+    header, etiquetas de Progress, etc. Los textos de la sección "Tipografía" en Foundations que
+    nombran la fuente por escrito ("Inter Bold · 48/52") se renombraron a "Geist".
 
 ## Nota técnica: bug de texto compartido en variantes
 
